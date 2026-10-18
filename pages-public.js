@@ -239,7 +239,7 @@
         more.hidden = done;
       } catch (e) {
         console.error(e);
-        st.innerHTML = e.code === "failed-precondition" ? B.ui.error(B.lang === "bn" ? "এই ফিল্টারের জন্য ইনডেক্স দরকার (অ্যাডমিন Firebase-এ ইনডেক্স যোগ করুন)।" : "This filter needs a Firestore index (admin: add it).") : B.ui.error(B.errMsg(e));
+        st.innerHTML = B.ui.error(B.errMsg(e));
       } finally { more.disabled = false; }
     }
     more.onclick = loadMore;

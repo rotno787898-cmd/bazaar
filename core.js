@@ -118,7 +118,7 @@ BV.url = (name, params) => (PAGES[name] || "/") + (params ? "?" + new URLSearchP
 BV.ui = {
   loading: () => `<div class="bv-state"><div class="bv-spin"></div>${BV.esc(BV.t("loading"))}</div>`,
   empty: (m) => `<div class="bv-state">${BV.esc(m || BV.t("empty"))}</div>`,
-  error: (m) => `<div class="bv-state" role="alert">${BV.esc(m || BV.t("error"))}</div>`,
+  error: (m) => `<div class="bv-state" role="alert">${BV.esc(m || BV.t("error"))}${m && m === BV.indexMsg && BV.indexUrl ? `<br><a class="bv-btn" style="margin-top:10px" href="${BV.esc(BV.indexUrl)}" target="_blank" rel="noopener noreferrer">${BV.lang === "bn" ? "ইনডেক্স তৈরির পাতা খুলুন (মালিকের জন্য)" : "Open index setup (owner)"}</a>` : ""}</div>`,
   statusChip: (kind, st) => `<span class="bv-chip ${["cancelled","rejected","removed"].includes(st) ? "bad" : ["payment_pending","payment_submitted","pending_review","paused","disputed"].includes(st) ? "warn" : ""}">${BV.esc(BV.t((kind === "p" ? "pst_" : "st_") + st))}</span>`,
 };
 BV.toast = (msg, type = "") => {
@@ -144,6 +144,13 @@ BV.errMsg = (e) => {
     "unavailable": bn ? "সার্ভারে সংযোগ হচ্ছে না। একটু পরে চেষ্টা করুন।" : "Service unavailable. Try again shortly.",
     "resource-exhausted": bn ? "আজকের সীমা শেষ। কাল আবার চেষ্টা করুন।" : "Daily limit reached. Try tomorrow.",
   };
+  if (c === "failed-precondition") {
+    // Firestore says which composite index is missing and gives a one-tap link that pre-fills it (site owner only needs to press Create)
+    const u = /https:\/\/console\.firebase\.google\.com\/\S+/.exec(e?.message || "");
+    if (u) BV.indexUrl = u[0].replace(/[)\].,]+$/, "");
+    BV.indexMsg = bn ? "এই তালিকার জন্য একটি ইনডেক্স তৈরি করা দরকার (সাইটের মালিক একবারই করবেন)।" : "This list needs a Firestore index (site owner: one-time setup).";
+    return BV.indexMsg;
+  }
   return m[c] || BV.t("error");
 };
 BV.btnBusy = async (btn, fn) => {
