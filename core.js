@@ -317,7 +317,11 @@ function boot() {
       review: "review", report: "report", pay: "pay", refund: "refund", terms: "terms", privacy: "privacy", safety: "safety", contact: "contact", "admin-x7k2": "admin" };
     const m = location.pathname.match(/^\/p\/([a-z0-9-]+)\.html$/);
     const pg = location.pathname === "/" || location.pathname === "" ? "home" : (m && FILE2PAGE[m[1]]);
-    if (pg) { const h = document.createElement("div"); h.id = "bv-app"; h.dataset.page = pg; document.body.appendChild(h); }
+    if (pg) {
+      const h = document.createElement("div"); h.id = "bv-app"; h.dataset.page = pg;
+      document.getElementById("bv-root").after(h);        // right under the header, above Blogger's own content
+      document.body.classList.add("bv-auto");             // CSS then hides everything else Blogger renders
+    }
   }
   const app = document.getElementById("bv-app");
   if (app) app.classList.add("bv-wrap");

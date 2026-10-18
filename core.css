@@ -101,3 +101,7 @@ fieldset legend{padding:0}
 .bv-hide-blogger .header-outer,.bv-hide-blogger #header,.bv-hide-blogger .blog-pager,.bv-hide-blogger .post-footer,
 .bv-hide-blogger #blog-pager,.bv-hide-blogger .sidebar,.bv-hide-blogger #sidebar-wrapper,.bv-hide-blogger #footer-wrapper,
 .bv-hide-blogger .post-title,.bv-hide-blogger h3.post-title,.bv-hide-blogger #navbar,.bv-hide-blogger .Navbar{display:none!important}
+
+/* Auto-mounted pages: show only our own elements, hide whatever the Blogger theme (desktop or mobile template) renders */
+body.bv-auto > *:not(#bv-root):not(#bv-app):not(#bv-foot):not(#bv-toasts):not(.bv-offline):not(script):not(style):not(link){display:none!important}
+body.bv-auto{background:var(--bv-bg,#f4f6f8)!important;background-image:none!important}
