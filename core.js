@@ -309,6 +309,10 @@ function setupOffline() {
 function boot() {
   if (!document.getElementById("bv-root")) { const r = document.createElement("div"); r.id = "bv-root"; document.body.prepend(r); }
   document.body.classList.add("bv-hide-blogger");
+  // Blogger home page cannot be a static Page: create the home mount automatically (no theme editing needed)
+  if (!document.getElementById("bv-app") && (location.pathname === "/" || location.pathname === "")) {
+    const h = document.createElement("div"); h.id = "bv-app"; h.dataset.page = "home"; document.body.appendChild(h);
+  }
   const app = document.getElementById("bv-app");
   if (app) app.classList.add("bv-wrap");
   if (app && app.dataset.page === "home") document.body.classList.add("bv-home");
