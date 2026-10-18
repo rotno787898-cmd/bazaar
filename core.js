@@ -310,8 +310,14 @@ function boot() {
   if (!document.getElementById("bv-root")) { const r = document.createElement("div"); r.id = "bv-root"; document.body.prepend(r); }
   document.body.classList.add("bv-hide-blogger");
   // Blogger home page cannot be a static Page: create the home mount automatically (no theme editing needed)
-  if (!document.getElementById("bv-app") && (location.pathname === "/" || location.pathname === "")) {
-    const h = document.createElement("div"); h.id = "bv-app"; h.dataset.page = "home"; document.body.appendChild(h);
+  // Likewise for /p/<name>.html pages: the Blogger page body can stay empty, the mount is created from the permalink
+  if (!document.getElementById("bv-app")) {
+    const FILE2PAGE = { shop: "shop", product: "product", category: "category", search: "search", seller: "seller", account: "buyer-dash", "seller-dashboard": "seller-dash",
+      login: "auth", "become-seller": "seller-apply", sell: "product-form", cart: "cart", checkout: "checkout", orders: "orders", order: "order", notifications: "notifications",
+      review: "review", report: "report", pay: "pay", refund: "refund", terms: "terms", privacy: "privacy", safety: "safety", contact: "contact", "admin-x7k2": "admin" };
+    const m = location.pathname.match(/^\/p\/([a-z0-9-]+)\.html$/);
+    const pg = location.pathname === "/" || location.pathname === "" ? "home" : (m && FILE2PAGE[m[1]]);
+    if (pg) { const h = document.createElement("div"); h.id = "bv-app"; h.dataset.page = pg; document.body.appendChild(h); }
   }
   const app = document.getElementById("bv-app");
   if (app) app.classList.add("bv-wrap");
