@@ -15,7 +15,7 @@
       coDNote: "ডেলিভারির নির্দেশনা (ঐচ্ছিক)", coONote: "অর্ডারের নোট (ঐচ্ছিক)",
       coSummary: "হিসাব", coSubtotal: "পণ্যের দাম", coDelivery: "ডেলিভারি ফি", coAdvance: "এখন অগ্রিম দিতে হবে", coCod: "ডেলিভারির সময় দেবেন", coTotal: "সব মিলিয়ে মোট",
       coMulti: "প্রতিটি পণ্যের জন্য আলাদা অর্ডার হয়, আলাদা অগ্রিম ও আলাদা ডেলিভারি ফি লাগে। প্রতিটি অগ্রিম পাঠানোর ট্রানজ্যাকশন আইডিও আলাদা হতে হবে।",
-      coAdvNote: "অগ্রিম = পণ্যের দামের {p}%। ডেলিভারি ফি আলাদা, ডেলিভারির সময় দিতে হবে।", coAgree: "আমি হিসাব দেখেছি এবং শর্তাবলি মেনে নিচ্ছি।", coPlace: "অর্ডার নিশ্চিত করুন",
+      coAdvNote: "অগ্রিম = পণ্যের দামের নির্ধারিত শতাংশ (প্রতিটি পণ্যের পাশে লেখা)। ডেলিভারি ফি আলাদা, ডেলিভারির সময় দিতে হবে।", coAgree: "আমি হিসাব দেখেছি এবং শর্তাবলি মেনে নিচ্ছি।", coPlace: "অর্ডার নিশ্চিত করুন",
       coNoItems: "চেকআউটের জন্য কোনো কেনার-যোগ্য পণ্য নেই।", coSettingsMissing: "সাইটের সেটিংস এখনো প্রস্তুত নয়। অ্যাডমিনের সাথে যোগাযোগ করুন।", coMaint: "সাইট এখন রক্ষণাবেক্ষণে আছে, নতুন অর্ডার নেওয়া যাচ্ছে না।",
       coDone: "অর্ডার হয়েছে!", coDoneMsg: "এখন প্রতিটি অর্ডারের অগ্রিম পাঠিয়ে ট্রানজ্যাকশন আইডি জমা দিন। অগ্রিম যাচাই না হওয়া পর্যন্ত অর্ডার নিশ্চিত হয় না।",
       coFailed: "এই অর্ডার হয়নি (স্টক, দাম বা বিক্রেতার অবস্থা বদলে থাকতে পারে)।", coOk: "অর্ডার হয়েছে", payNow: "অগ্রিম দিন", noneSel: "কমপক্ষে একটি পণ্য বাছুন।",
@@ -42,7 +42,7 @@
       coDNote: "Delivery instructions (optional)", coONote: "Order note (optional)",
       coSummary: "Summary", coSubtotal: "Items", coDelivery: "Delivery fee", coAdvance: "Advance to pay now", coCod: "Pay on delivery", coTotal: "Grand total",
       coMulti: "Each product becomes a separate order with its own advance and delivery fee. Each advance payment needs its own transaction ID.",
-      coAdvNote: "Advance = {p}% of the item price. The delivery fee is separate and paid on delivery.", coAgree: "I have checked the amounts and accept the terms.", coPlace: "Confirm order",
+      coAdvNote: "Advance = the percentage of the item price set for each product (shown beside it). The delivery fee is separate and paid on delivery.", coAgree: "I have checked the amounts and accept the terms.", coPlace: "Confirm order",
       coNoItems: "There is nothing purchasable to check out.", coSettingsMissing: "Site settings are not ready yet. Contact the admin.", coMaint: "The site is under maintenance; new orders are paused.",
       coDone: "Order placed!", coDoneMsg: "Now send the advance for each order and submit its transaction ID. An order is not confirmed until the advance is verified.",
       coFailed: "This order failed (stock, price or seller status may have changed).", coOk: "Order placed", payNow: "Pay advance", noneSel: "Select at least one item.",
@@ -142,8 +142,9 @@
   /* ================= CHECKOUT ================= */
   const calc = (p, qty, method, S) => {
     const subtotal = p.price * qty, deliveryFee = method === "pickup" ? 0 : S.flatDeliveryFee;
-    const advanceAmount = Math.ceil(subtotal * S.advancePercent / 100), totalAmount = subtotal + deliveryFee;
-    return { subtotal, deliveryFee, advanceAmount, totalAmount, codAmount: totalAmount - advanceAmount };
+    const pct = Number.isInteger(p.advancePercent) ? p.advancePercent : S.advancePercent;   // per-product advance %, else site default
+    const advanceAmount = Math.floor((subtotal * pct + 99) / 100), totalAmount = subtotal + deliveryFee;   // = ceil(subtotal*pct/100), integers only
+    return { subtotal, deliveryFee, advancePercent: pct, advanceAmount, totalAmount, codAmount: totalAmount - advanceAmount };
   };
 
   B.registerPage("checkout", async (m) => {
@@ -183,7 +184,7 @@
       let st = 0, df = 0, ad = 0, cod = 0, tot = 0;
       lines.forEach((l, i) => {
         const c = calc(l.p, l.qty, l.method, S), el = m.querySelector(`[data-line="${i}"]`);
-        el.textContent = `${t("coSubtotal")}: ${B.taka(c.subtotal)} · ${t("coDelivery")}: ${B.taka(c.deliveryFee)} · ${t("coAdvance")}: ${B.taka(c.advanceAmount)}`;
+        el.textContent = `${t("coSubtotal")}: ${B.taka(c.subtotal)} · ${t("coDelivery")}: ${B.taka(c.deliveryFee)} · ${t("coAdvance")} (${B.num(c.advancePercent)}%): ${B.taka(c.advanceAmount)}`;
         if (l.on) { st += c.subtotal; df += c.deliveryFee; ad += c.advanceAmount; cod += c.codAmount; tot += c.totalAmount; }
       });
       $("#co-sum").innerHTML = `<h2 style="margin-top:0;font-size:1.1rem">${esc(t("coSummary"))}</h2>
@@ -192,7 +193,7 @@
         <div class="bv-row" style="justify-content:space-between"><strong>${esc(t("coTotal"))}</strong><strong>${B.taka(tot)}</strong></div><hr>
         <div class="bv-row" style="justify-content:space-between;color:var(--bv-primary)"><strong>${esc(t("coAdvance"))}</strong><strong style="font-size:1.3rem">${B.taka(ad)}</strong></div>
         <div class="bv-row" style="justify-content:space-between"><span>${esc(t("coCod"))}</span><span>${B.taka(cod)}</span></div>
-        <p class="bv-hint">${esc(t("coAdvNote", { p: B.num(S.advancePercent) }))}</p>`;
+        <p class="bv-hint">${esc(t("coAdvNote"))}</p>`;
     }
     m.querySelectorAll("[data-sel]").forEach((c) => { c.onchange = () => { lines[Number(c.dataset.sel)].on = c.checked; sum(); }; });
     m.querySelectorAll("[data-mt]").forEach((r) => { r.onchange = () => { lines[Number(r.dataset.mt)].method = r.value; sum(); }; });
@@ -214,7 +215,7 @@
           const batch = F.writeBatch(db);
           batch.set(F.doc(db, "orders", id), { orderId: id, buyerId: uid, sellerId: p.sellerId, sellerName: p.sellerName, productId: p.id, productTitle: p.title, productImage: p.images[0],
             productCondition: p.condition, productDefects: p.defects, categoryId: p.categoryId, qty: l.qty, unitPrice: p.price, subtotal: c.subtotal, deliveryMethod: l.method,
-            deliveryFee: c.deliveryFee, advancePercent: S.advancePercent, advanceAmount: c.advanceAmount, codAmount: c.codAmount, totalAmount: c.totalAmount,
+            deliveryFee: c.deliveryFee, advancePercent: c.advancePercent, advanceAmount: c.advanceAmount, codAmount: c.codAmount, totalAmount: c.totalAmount,
             district, status: "payment_pending", paymentStatus: "unpaid", stockDeducted: false, createdAt: ts, updatedAt: ts });
           batch.set(F.doc(db, "dealRooms", id), { orderId: id, buyerId: uid, sellerId: p.sellerId, participants: [uid, p.sellerId], productTitle: p.title, status: "open", createdAt: ts, updatedAt: ts });
           const ship = { buyerName: name, buyerPhone: phone, address: addr, district, area, createdAt: ts };

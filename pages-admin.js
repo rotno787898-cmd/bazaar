@@ -496,6 +496,7 @@
       <div class="bv-row"><div style="flex:1;min-width:140px"><label>English নাম</label><input data-ce maxlength="60" value="${esc(c.nameEn || "")}"></div>
         <div style="flex:1;min-width:140px"><label>বাংলা নাম</label><input data-cb maxlength="60" value="${esc(c.nameBn || "")}"></div>
         <div style="width:90px"><label>ক্রম</label><input data-co type="number" value="${esc(c.sortOrder ?? 100)}"></div></div>
+      <label style="font-weight:400"><input type="checkbox" data-cfa style="width:auto;min-height:0"${c.fullAdvance ? " checked" : ""}> ডিজিটাল/সরাসরি পাঠানো পণ্য (সাবস্ক্রিপশন, অ্যাকাউন্ট ইত্যাদি): ১০০% অগ্রিম বাধ্যতামূলক</label>
       <label>অতিরিক্ত ফিল্ড (প্রতি লাইনে: key|English|বাংলা|text অথবা number)</label><textarea data-cf rows="3" placeholder="storage|Storage|স্টোরেজ|text">${esc(fieldsToText(c.fields))}</textarea>
       <div class="bv-row">${btn("c-save", id ? "সংরক্ষণ" : "যোগ করুন", "")}${id ? btn("c-toggle", c.active ? "বন্ধ করুন" : "চালু করুন", c.active ? "danger" : "sec") : ""}</div></div>`;
   async function tabCats(m) {
@@ -515,7 +516,7 @@
         if ((await F.getDoc(dref("categories", cid))).exists()) throw new Error("এই নামে ক্যাটাগরি আছে: " + cid);
       }
       const bt = F.writeBatch(db), aid = newAudit(bt, id ? "category_update" : "category_create", "category", cid);
-      const d = { nameEn: en.slice(0, 60), nameBn: bn.slice(0, 60), sortOrder: so, fields, auditId: aid, updatedAt: ts() };
+      const d = { nameEn: en.slice(0, 60), nameBn: bn.slice(0, 60), sortOrder: so, fields, fullAdvance: c.querySelector("[data-cfa]").checked, auditId: aid, updatedAt: ts() };
       if (!id) { d.active = true; d.createdAt = ts(); }
       bt.set(dref("categories", cid), d, { merge: true }); await bt.commit(); B.toast("সংরক্ষিত", "ok"); render();
     }),
@@ -537,9 +538,9 @@
       ${field("s-name", "সাইটের নাম", S.siteName, 'maxlength="40"')}
       <label for="s-logo">লোগো (ছবি আপলোড করুন)</label><div class="bv-row"><input id="s-logo" value="${esc(S.logoUrl || "")}" placeholder="https://res.cloudinary.com/…" style="flex:1"><input type="file" id="s-logof" accept="image/*" style="max-width:220px"></div>
       ${field("s-color", "থিমের রং (যেমন #0f766e)", S.themeColor, 'maxlength="7"')}
-      <div class="bv-row"><div style="flex:1;min-width:150px">${field("s-adv", "অগ্রিমের শতাংশ (১–৫০)", S.advancePercent ?? 10, 'type="number" min="1" max="50"')}</div>
+      <div class="bv-row"><div style="flex:1;min-width:150px">${field("s-adv", "ন্যূনতম অগ্রিমের শতাংশ (১–৫০)", S.advancePercent ?? 10, 'type="number" min="1" max="50"')}</div>
         <div style="flex:1;min-width:150px">${field("s-fee", "ডেলিভারি ফি (৳, ফ্ল্যাট)", S.flatDeliveryFee ?? 120, 'type="number" min="0" max="5000"')}</div></div>
-      <p class="bv-hint">শতাংশ বা ফি বদলালে শুধু নতুন অর্ডারে খাটবে, আগের অর্ডারের হিসাব বদলায় না।</p>
+      <p class="bv-hint">এটি অগ্রিমের ন্যূনতম শতাংশ; বিক্রেতা পণ্যে এর চেয়ে বেশি (সর্বোচ্চ ১০০%) ঠিক করতে পারেন। বদলালে শুধু নতুন অর্ডারে খাটবে, আগের অর্ডারের হিসাব বদলায় না।</p>
       <h3 style="font-size:1rem">যোগাযোগ</h3>${field("s-phone", "ফোন", c.phone, 'maxlength="30"')}${field("s-email", "ইমেইল", c.email, 'maxlength="80"')}${field("s-addr", "ঠিকানা", c.address, 'maxlength="160"')}
       <h3 style="font-size:1rem">ব্যানার ও নোটিশ</h3>${field("s-ban", "ব্যানারের লেখা", bn.text, 'maxlength="160"')}<label><input type="checkbox" id="s-banon" style="width:auto;min-height:0"${bn.active ? " checked" : ""}> ব্যানার দেখান</label>
       <label><input type="checkbox" id="s-maint" style="width:auto;min-height:0"${S.maintenanceMode ? " checked" : ""}> রক্ষণাবেক্ষণ মোড (নতুন অর্ডার বন্ধ)</label>${field("s-maintn", "রক্ষণাবেক্ষণের বার্তা", S.maintenanceNotice, 'maxlength="200"')}

@@ -25,7 +25,7 @@
       pfNew: "নতুন পণ্য যোগ করুন", pfEdit: "পণ্য এডিট করুন", pfNotFound: "পণ্য পাওয়া যায়নি।", pfNotYours: "এটি আপনার পণ্য নয়।", pfRemoved: "এই পণ্য সরিয়ে ফেলা হয়েছে, এডিট করা যাবে না।",
       pfPubWarn: "এই পণ্য এখন প্রকাশিত। সেভ করলে অ্যাডমিন আবার যাচাই না করা পর্যন্ত এটি লুকানো থাকবে।",
       fTitle: "পণ্যের নাম", fCategory: "ক্যাটাগরি", fSub: "সাব-ক্যাটাগরি (ঐচ্ছিক)", fImages: "ছবি (১ থেকে ৬টি, প্রথমটি মূল ছবি)", fAddImg: "ছবি যোগ করুন",
-      fPrice: "বিক্রয়মূল্য (টাকা)", fOrigPrice: "কেনার সময়ের দাম (ঐচ্ছিক)", fOffer: "অফার/ছাড়ের নোট (ঐচ্ছিক)", fNeg: "দর-কষাকষি করা যাবে?", fStock: "স্টক (পরিমাণ)",
+      fPrice: "বিক্রয়মূল্য (টাকা)", fOrigPrice: "কেনার সময়ের দাম (ঐচ্ছিক)", fOffer: "অফার/ছাড়ের নোট (ঐচ্ছিক)", fNeg: "দর-কষাকষি করা যাবে?", fStock: "স্টক (পরিমাণ)", fAdv: "অগ্রিম কত %", fAdvDefault: "সাইটের নিয়ম ({p}%)", fAdvHint: "ক্রেতাকে অর্ডারের সময় এই শতাংশ অগ্রিম দিতে হবে, বাকিটা ডেলিভারিতে। সাইটের ন্যূনতম {p}%, সর্বোচ্চ ১০০% (পুরো দাম আগে)।", fAdvFull: "এই ক্যাটাগরির (ডিজিটাল/সরাসরি পাঠানো পণ্য) জন্য ১০০% অগ্রিম বাধ্যতামূলক।",
       fCond: "পণ্যের অবস্থা", fUsage: "কতদিন ব্যবহার করেছেন", fYear: "কেনার বছর (ঐচ্ছিক)", fDesc: "বিবরণ", fFeat: "মূল সুবিধা (ঐচ্ছিক)",
       fDefects: "জানা ত্রুটি, সমস্যা ও মেরামতের ইতিহাস", fAcc: "সাথে কী কী পাবেন (ঐচ্ছিক)", fBrand: "ব্র্যান্ড (ঐচ্ছিক)", fModel: "মডেল (ঐচ্ছিক)", fWarranty: "ওয়ারেন্টি ও প্রমাণ (ঐচ্ছিক)",
       fDistrict: "জেলা", fArea: "এলাকা", fDelivery: "ডেলিভারি অপশন", fSellerNotes: "বিক্রেতার নোট (ঐচ্ছিক)", fReturn: "রিটার্ন/সমস্যা নিষ্পত্তির নিয়ম (ঐচ্ছিক)",
@@ -58,7 +58,7 @@
       pfNew: "Add a new product", pfEdit: "Edit product", pfNotFound: "Product not found.", pfNotYours: "This is not your product.", pfRemoved: "This listing was removed and cannot be edited.",
       pfPubWarn: "This listing is live. Saving hides it until an admin reviews it again.",
       fTitle: "Product name", fCategory: "Category", fSub: "Subcategory (optional)", fImages: "Photos (1 to 6, the first is the main photo)", fAddImg: "Add photos",
-      fPrice: "Selling price (Taka)", fOrigPrice: "Original purchase price (optional)", fOffer: "Offer / discount note (optional)", fNeg: "Is the price negotiable?", fStock: "Stock (quantity)",
+      fPrice: "Selling price (Taka)", fOrigPrice: "Original purchase price (optional)", fOffer: "Offer / discount note (optional)", fNeg: "Is the price negotiable?", fStock: "Stock (quantity)", fAdv: "Advance %", fAdvDefault: "Site default ({p}%)", fAdvHint: "The buyer pays this percentage when ordering, the rest on delivery. Site minimum {p}%, maximum 100% (full price upfront).", fAdvFull: "100% advance is mandatory for this category (digital / directly delivered items).",
       fCond: "Condition", fUsage: "How long used", fYear: "Purchase year (optional)", fDesc: "Description", fFeat: "Main features (optional)",
       fDefects: "Known defects, problems and repair history", fAcc: "Included accessories (optional)", fBrand: "Brand (optional)", fModel: "Model (optional)", fWarranty: "Warranty and proof (optional)",
       fDistrict: "District", fArea: "Area", fDelivery: "Delivery options", fSellerNotes: "Seller notes (optional)", fReturn: "Return / dispute policy (optional)",
@@ -281,6 +281,9 @@
     let cf = Object.assign({}, d.categoryFields || {});
     const v = (x) => (x === undefined || x === null ? "" : x);
     const opt = (val, label, sel) => `<option value="${esc(val)}"${sel ? " selected" : ""}>${esc(label)}</option>`;
+    const minAdv = Number(B.settings.advancePercent) || 10;
+    const advOpts = (cur) => opt("", t("fAdvDefault", { p: B.num(minAdv) }), !Number.isInteger(cur)) + [10, 20, 30, 40, 50, 60, 70, 80, 90, 100].filter((x) => x >= minAdv).map((x) => opt(String(x), x + "%", cur === x)).join("");
+    const catFull = (id) => { const c = cats.find((x) => x.id === id); return !!(c && c.fullAdvance === true); };
 
     m.innerHTML = `<div class="bv-card bv-pad" style="max-width:720px;margin:0 auto"><h1 class="bv-h1">${esc(t(p ? "pfEdit" : "pfNew"))}</h1>
       ${p && p.status === "published" ? `<div class="bv-banner" role="alert">${esc(t("pfPubWarn"))}</div>` : ""}
@@ -299,6 +302,7 @@
           <label style="font-weight:400;display:inline-block;margin-right:16px"><input type="radio" name="neg" value="1" style="width:auto;min-height:0"${d.negotiable ? " checked" : ""}> ${esc(t("yes"))}</label>
           <label style="font-weight:400;display:inline-block"><input type="radio" name="neg" value="0" style="width:auto;min-height:0"${d.negotiable ? "" : " checked"}> ${esc(t("no"))}</label></fieldset>
         <label for="f-stock">${esc(t("fStock"))}</label><input id="f-stock" inputmode="numeric" value="${esc(v(d.stock))}">
+        <label for="f-adv">${esc(t("fAdv"))}</label><select id="f-adv">${advOpts(d.advancePercent)}</select><div class="bv-hint" id="f-advhint"></div>
         <label for="f-cond">${esc(t("fCond"))}</label><select id="f-cond">${["brand_new", "like_new", "good", "fair", "for_parts"].map((c) => opt(c, t("cond_" + c), c === d.condition)).join("")}</select>
         <div id="f-usewrap"><label for="f-use">${esc(t("fUsage"))}</label><input id="f-use" maxlength="60" value="${esc(v(d.usageDuration))}"></div>
         <label for="f-year">${esc(t("fYear"))}</label><input id="f-year" inputmode="numeric" maxlength="4" value="${esc(v(d.purchaseYear))}">
@@ -352,8 +356,13 @@
       uploading = false; imgSt.textContent = "";
     };
     function syncUse() { $("#f-usewrap").hidden = $("#f-cond").value === "brand_new"; }
-    $("#f-cat").onchange = drawCf; $("#f-cond").onchange = syncUse;
-    drawCf(); drawImgs(); syncUse();
+    function syncAdv() {
+      const full = catFull($("#f-cat").value), sel = $("#f-adv");
+      if (full) { sel.innerHTML = opt("100", "100%", true); sel.disabled = true; $("#f-advhint").textContent = t("fAdvFull"); }
+      else { const cur = sel.disabled ? "" : sel.value; sel.disabled = false; sel.innerHTML = advOpts(cur === "" ? undefined : Number(cur)); $("#f-advhint").textContent = t("fAdvHint", { p: B.num(minAdv) }); }
+    }
+    $("#f-cat").onchange = () => { drawCf(); syncAdv(); }; $("#f-cond").onchange = syncUse;
+    drawCf(); drawImgs(); syncUse(); syncAdv();
 
     m.querySelectorAll("[data-save]").forEach((btn) => { btn.onclick = () => B.btnBusy(btn, async () => {
       err.textContent = "";
@@ -387,7 +396,8 @@
       const status = btn.dataset.save, ts = F.serverTimestamp(), DEL = F.deleteField();
       const optional = { subcategory: str("#f-sub"), offerNote: str("#f-offer"), usageDuration: cond === "brand_new" ? "" : usage, features: str("#f-feat"), accessories: str("#f-acc"),
         brand: str("#f-brand"), model: str("#f-model"), warrantyInfo: str("#f-war"), sellerNotes: str("#f-sn"), returnPolicy: str("#f-ret"),
-        originalPrice: orig, purchaseYear: year, categoryFields: Object.keys(cfOut).length ? cfOut : "" };
+        originalPrice: orig, purchaseYear: year, categoryFields: Object.keys(cfOut).length ? cfOut : "",
+        advancePercent: catFull($("#f-cat").value) ? 100 : ($("#f-adv").value ? Number($("#f-adv").value) : null) };
       const data = { title, categoryId: $("#f-cat").value, price, negotiable: m.querySelector("input[name=neg]:checked").value === "1", stock, condition: cond, description: desc, defects,
         district: $("#f-dist").value, area, deliveryOptions: delivery, ownershipConfirmed: true, images: imgs.slice(0, 6),
         searchTokens: B.tokens(title, optional.brand, optional.model, optional.subcategory), status, updatedAt: ts };

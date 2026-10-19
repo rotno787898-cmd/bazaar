@@ -11,14 +11,14 @@
       filter: "ফিল্টার", sortBy: "সাজান", category: "ক্যাটাগরি", district: "জেলা", condition: "অবস্থা",
       searchResult: "খোঁজার ফল", searchEmpty: "কী খুঁজবেন লিখুন।", searchTip: "টিপস: পুরো শব্দ লিখুন (যেমন: মোবাইল, ফ্যান, সোফা)।",
       latest: "নতুন পণ্য", recent: "সম্প্রতি দেখেছেন", seeAll: "সব দেখুন", cats: "ক্যাটাগরি",
-      how: "কীভাবে কিনবেন", how1: "পছন্দের পণ্য বেছে অর্ডার করুন", how2: "{p}% অগ্রিম বিকাশ/নগদ/রকেটে পাঠিয়ে ট্রানজ্যাকশন আইডি দিন", how3: "অ্যাডমিন যাচাই করলে পণ্য পাঠানো হবে; বাকি টাকা ডেলিভারিতে দিন",
+      how: "কীভাবে কিনবেন", how1: "পছন্দের পণ্য বেছে অর্ডার করুন", how2: "পণ্যে লেখা অগ্রিম (কমপক্ষে {p}%) বিকাশ/নগদ/রকেটে পাঠিয়ে ট্রানজ্যাকশন আইডি দিন", how3: "অ্যাডমিন যাচাই করলে পণ্য পাঠানো হবে; বাকি টাকা ডেলিভারিতে দিন",
       prodNotFound: "পণ্যটি পাওয়া যায়নি বা এখন দেখা যাচ্ছে না।", addCart: "কার্টে রাখুন", buyNow: "এখনই কিনুন", added: "কার্টে যোগ হয়েছে।", qty: "পরিমাণ",
       inStock: "স্টকে আছে: {n}টি", defects: "জানা ত্রুটি / সমস্যা", noDefects: "বিক্রেতার মতে কোনো জানা ত্রুটি নেই।", desc: "বিবরণ", features: "মূল সুবিধা",
       accessories: "সাথে যা পাবেন", warranty: "ওয়ারেন্টি", usage: "কতদিন ব্যবহার", purchased: "কেনার বছর", brand: "ব্র্যান্ড", model: "মডেল",
       location: "এলাকা", delivery: "ডেলিভারি", pickup: "সরাসরি নিয়ে যাওয়া", homeDelivery: "হোম ডেলিভারি", negotiable: "দর-কষাকষি করা যাবে", fixedPrice: "দাম নির্ধারিত",
       sellerNotes: "বিক্রেতার নোট", returnPolicy: "রিটার্ন / সমস্যা নিষ্পত্তি", seller: "বিক্রেতা", viewShop: "প্রোফাইল দেখুন", report: "রিপোর্ট করুন",
       related: "আরও পণ্য", reviews: "রিভিউ", ownProduct: "এটি আপনার নিজের পণ্য।", notPublished: "এই পণ্য এখনো প্রকাশিত নয় (শুধু আপনি দেখছেন)।",
-      wish: "পছন্দ", wishAdd: "পছন্দের তালিকায় রাখুন", wishRemove: "তালিকা থেকে সরান", advanceNote: "অর্ডারের সময় মূল্যের {p}% অগ্রিম দিতে হবে, বাকিটা ডেলিভারিতে।",
+      wish: "পছন্দ", wishAdd: "পছন্দের তালিকায় রাখুন", wishRemove: "তালিকা থেকে সরান", advanceNote: "অর্ডারের সময় মূল্যের {p}% অগ্রিম দিতে হবে, বাকিটা ডেলিভারিতে।", advanceFull: "এই পণ্যে ১০০% অগ্রিম দিতে হবে (পুরো দাম আগেই), ডেলিভারি ফি আলাদা।",
       joined: "যোগ দিয়েছেন", listings: "প্রকাশিত পণ্য", sales: "সম্পন্ন বিক্রি", rating: "গড় রেটিং", suspendedSeller: "এই বিক্রেতা সাময়িকভাবে বন্ধ।",
       // auth
       authTitle: "লগইন / রেজিস্টার", name: "পুরো নাম", email: "ইমেইল", phone: "মোবাইল নম্বর", password: "পাসওয়ার্ড", accType: "আপনি কী করতে চান?",
@@ -44,14 +44,14 @@
       filter: "Filter", sortBy: "Sort", category: "Category", district: "District", condition: "Condition",
       searchResult: "Search results", searchEmpty: "Type what you want to find.", searchTip: "Tip: use whole words (e.g. phone, fan, sofa).",
       latest: "Latest listings", recent: "Recently viewed", seeAll: "See all", cats: "Categories",
-      how: "How to buy", how1: "Pick an item and place the order", how2: "Send {p}% advance by bKash/Nagad/Rocket and enter the transaction ID", how3: "Admin verifies, item is dispatched; pay the rest on delivery",
+      how: "How to buy", how1: "Pick an item and place the order", how2: "Send the advance shown on the item (at least {p}%) by bKash/Nagad/Rocket and enter the transaction ID", how3: "Admin verifies, item is dispatched; pay the rest on delivery",
       prodNotFound: "This product was not found or is not available.", addCart: "Add to cart", buyNow: "Buy now", added: "Added to cart.", qty: "Quantity",
       inStock: "In stock: {n}", defects: "Known defects / problems", noDefects: "Seller reports no known defects.", desc: "Description", features: "Key features",
       accessories: "Included accessories", warranty: "Warranty", usage: "Time used", purchased: "Purchase year", brand: "Brand", model: "Model",
       location: "Location", delivery: "Delivery", pickup: "Pickup", homeDelivery: "Home delivery", negotiable: "Price negotiable", fixedPrice: "Fixed price",
       sellerNotes: "Seller notes", returnPolicy: "Return / dispute policy", seller: "Seller", viewShop: "View profile", report: "Report",
       related: "More items", reviews: "Reviews", ownProduct: "This is your own listing.", notPublished: "Not published yet (only you can see this).",
-      wish: "Wishlist", wishAdd: "Add to wishlist", wishRemove: "Remove from wishlist", advanceNote: "{p}% advance is paid when ordering; the rest on delivery.",
+      wish: "Wishlist", wishAdd: "Add to wishlist", wishRemove: "Remove from wishlist", advanceNote: "{p}% advance is paid when ordering; the rest on delivery.", advanceFull: "This item needs 100% advance (full price upfront); delivery fee is separate.",
       joined: "Joined", listings: "Live listings", sales: "Completed sales", rating: "Average rating", suspendedSeller: "This seller is temporarily suspended.",
       authTitle: "Log in / Sign up", name: "Full name", email: "Email", phone: "Mobile number", password: "Password", accType: "What do you want to do?",
       buyerType: "Buy", sellerType: "Sell", agreeTerms: "I accept the Terms and Privacy policy.", forgot: "Forgot password?",
@@ -327,7 +327,7 @@
           <div class="bv-meta">${p.stock > 0 ? esc(t("inStock", { n: B.num(p.stock) })) : esc(t("pst_sold_out"))}</div>
           <div class="bv-card bv-pad" style="background:#fff8e6;border-color:#f3d28a;margin:12px 0"><strong>⚠ ${esc(t("defects"))}</strong><div>${nl2br(p.defects) || esc(t("noDefects"))}</div></div>
           ${can ? `<label for="bv-qty">${esc(t("qty"))}</label><input id="bv-qty" type="number" min="1" max="${Math.min(p.stock, 99)}" value="1" inputmode="numeric" style="max-width:120px">
-            <p class="bv-hint">${esc(t("advanceNote", { p: B.num(B.settings.advancePercent) }))}</p>
+            <p class="bv-hint">${esc(Number(p.advancePercent) === 100 ? t("advanceFull") : t("advanceNote", { p: B.num(Number.isInteger(p.advancePercent) ? p.advancePercent : B.settings.advancePercent) }))}</p>
             <div class="bv-row"><button class="bv-btn" id="bv-buy">${esc(t("buyNow"))}</button><button class="bv-btn sec" id="bv-cart">${esc(t("addCart"))}</button></div>` : own ? `<p class="bv-hint">${esc(t("ownProduct"))}</p>` : ""}
           <div class="bv-row" style="margin-top:10px"><button class="bv-btn sec" id="bv-wish">${B.wish && B.wish.has(id) ? "♥ " + esc(t("wishRemove")) : "♡ " + esc(t("wishAdd"))}</button>
             <a href="${B.url("report", { type: "product", id })}">⚑ ${esc(t("report"))}</a></div>
