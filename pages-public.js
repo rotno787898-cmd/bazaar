@@ -18,7 +18,7 @@
       location: "এলাকা", delivery: "ডেলিভারি", pickup: "সরাসরি নিয়ে যাওয়া", homeDelivery: "হোম ডেলিভারি", negotiable: "দর-কষাকষি করা যাবে", fixedPrice: "দাম নির্ধারিত",
       sellerNotes: "বিক্রেতার নোট", returnPolicy: "রিটার্ন / সমস্যা নিষ্পত্তি", seller: "বিক্রেতা", viewShop: "প্রোফাইল দেখুন", report: "রিপোর্ট করুন",
       related: "আরও পণ্য", reviews: "রিভিউ", ownProduct: "এটি আপনার নিজের পণ্য।", notPublished: "এই পণ্য এখনো প্রকাশিত নয় (শুধু আপনি দেখছেন)।",
-      wish: "পছন্দ", wishAdd: "পছন্দের তালিকায় রাখুন", wishRemove: "তালিকা থেকে সরান", advanceNote: "অর্ডারের সময় মূল্যের {p}% অগ্রিম দিতে হবে, বাকিটা ডেলিভারিতে।", advanceFull: "এই পণ্যে ১০০% অগ্রিম দিতে হবে (পুরো দাম আগেই), ডেলিভারি ফি আলাদা।",
+      wish: "পছন্দ", wishAdd: "পছন্দের তালিকায় রাখুন", wishRemove: "তালিকা থেকে সরান", copyLink: "লিংক কপি করুন", linkCopied: "লিংক কপি হয়েছে", shareMore: "শেয়ার করুন", shareText: "দেখুন এই পণ্যটি:", advanceNote: "অর্ডারের সময় মূল্যের {p}% অগ্রিম দিতে হবে, বাকিটা ডেলিভারিতে।", advanceFull: "এই পণ্যে ১০০% অগ্রিম দিতে হবে (পুরো দাম আগেই), ডেলিভারি ফি আলাদা।",
       joined: "যোগ দিয়েছেন", listings: "প্রকাশিত পণ্য", sales: "সম্পন্ন বিক্রি", rating: "গড় রেটিং", suspendedSeller: "এই বিক্রেতা সাময়িকভাবে বন্ধ।",
       // auth
       authTitle: "লগইন / রেজিস্টার", name: "পুরো নাম", email: "ইমেইল", phone: "মোবাইল নম্বর", password: "পাসওয়ার্ড", accType: "আপনি কী করতে চান?",
@@ -51,7 +51,7 @@
       location: "Location", delivery: "Delivery", pickup: "Pickup", homeDelivery: "Home delivery", negotiable: "Price negotiable", fixedPrice: "Fixed price",
       sellerNotes: "Seller notes", returnPolicy: "Return / dispute policy", seller: "Seller", viewShop: "View profile", report: "Report",
       related: "More items", reviews: "Reviews", ownProduct: "This is your own listing.", notPublished: "Not published yet (only you can see this).",
-      wish: "Wishlist", wishAdd: "Add to wishlist", wishRemove: "Remove from wishlist", advanceNote: "{p}% advance is paid when ordering; the rest on delivery.", advanceFull: "This item needs 100% advance (full price upfront); delivery fee is separate.",
+      wish: "Wishlist", wishAdd: "Add to wishlist", wishRemove: "Remove from wishlist", copyLink: "Copy link", linkCopied: "Link copied", shareMore: "Share", shareText: "Check out this item:", advanceNote: "{p}% advance is paid when ordering; the rest on delivery.", advanceFull: "This item needs 100% advance (full price upfront); delivery fee is separate.",
       joined: "Joined", listings: "Live listings", sales: "Completed sales", rating: "Average rating", suspendedSeller: "This seller is temporarily suspended.",
       authTitle: "Log in / Sign up", name: "Full name", email: "Email", phone: "Mobile number", password: "Password", accType: "What do you want to do?",
       buyerType: "Buy", sellerType: "Sell", agreeTerms: "I accept the Terms and Privacy policy.", forgot: "Forgot password?",
@@ -331,6 +331,10 @@
             <div class="bv-row"><button class="bv-btn" id="bv-buy">${esc(t("buyNow"))}</button><button class="bv-btn sec" id="bv-cart">${esc(t("addCart"))}</button></div>` : own ? `<p class="bv-hint">${esc(t("ownProduct"))}</p>` : ""}
           <div class="bv-row" style="margin-top:10px"><button class="bv-btn sec" id="bv-wish">${B.wish && B.wish.has(id) ? "♥ " + esc(t("wishRemove")) : "♡ " + esc(t("wishAdd"))}</button>
             <a href="${B.url("report", { type: "product", id })}">⚑ ${esc(t("report"))}</a></div>
+          ${published ? `<div class="bv-row" style="margin-top:10px"><button class="bv-btn sec" id="bv-copy" type="button">🔗 ${esc(t("copyLink"))}</button>
+            <a class="bv-btn sec" target="_blank" rel="noopener noreferrer" href="https://wa.me/?text=${encodeURIComponent(t("shareText") + " " + p.title + " " + url)}">WhatsApp</a>
+            <a class="bv-btn sec" target="_blank" rel="noopener noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}">Facebook</a>
+            <button class="bv-btn sec" id="bv-share" type="button" hidden>${esc(t("shareMore"))}</button></div>` : ""}
         </div></div></div>
       <div class="bv-card bv-pad" style="margin-top:12px"><div class="bv-scroll"><table class="bv-table"><tbody>
         ${row("brand", esc(p.brand || ""))}${row("model", esc(p.model || ""))}${row("usage", esc(p.usageDuration || ""))}${row("purchased", p.purchaseYear ? B.num(p.purchaseYear).replace(/,/g, "") : "")}
@@ -348,6 +352,15 @@
     const qtyVal = () => Math.max(1, Math.min(Number(m.querySelector("#bv-qty")?.value) || 1, p.stock, 99));
     const wishBtn = m.querySelector("#bv-wish");
     wishBtn.onclick = async () => { try { const r = await toggleWish(id); if (r !== null) wishBtn.textContent = r ? "♥ " + t("wishRemove") : "♡ " + t("wishAdd"); } catch (e) { B.toast(B.errMsg(e), "bad"); } };
+    const copyBtn = m.querySelector("#bv-copy"), shareBtn = m.querySelector("#bv-share");
+    if (copyBtn) copyBtn.onclick = async () => {
+      let ok = false;
+      try { await navigator.clipboard.writeText(url); ok = true; } catch (e) {
+        try { const ta = document.createElement("textarea"); ta.value = url; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); ok = document.execCommand("copy"); ta.remove(); } catch (e2) { /* ignore */ }
+      }
+      if (ok) B.toast(t("linkCopied"), "ok"); else window.prompt(t("copyLink"), url);
+    };
+    if (shareBtn && navigator.share) { shareBtn.hidden = false; shareBtn.onclick = () => { navigator.share({ title: p.title, text: t("shareText") + " " + p.title, url }).catch(() => {}); }; }
     const cartBtn = m.querySelector("#bv-cart"), buyBtn = m.querySelector("#bv-buy");
     if (cartBtn) cartBtn.onclick = () => B.btnBusy(cartBtn, async () => { try { if (await addToCart(p, qtyVal())) B.toast(t("added"), "ok"); } catch (e) { B.toast(B.errMsg(e), "bad"); } });
     if (buyBtn) buyBtn.onclick = () => B.btnBusy(buyBtn, async () => { try { if (await addToCart(p, qtyVal())) location.href = B.url("cart"); } catch (e) { B.toast(B.errMsg(e), "bad"); } });
